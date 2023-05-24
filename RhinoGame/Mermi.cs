@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RhinoGame
 {
-    class Mermi
+    public class Mermi
     {
         public int x;
         public int y;

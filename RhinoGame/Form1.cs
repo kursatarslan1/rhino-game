@@ -14,21 +14,27 @@ namespace RhinoGame
     {
 
         Rhino tank;
+        Rhino tank2;
         Mermi mermi;
+        Mermi mermi2;
+        bool checkMermi = false;
         private readonly int boyut = 10;
         int[,] map = new int[40, 60];
         private readonly Label rhino1 = new Label();
-        public int x = 305, y = 350;
+        private readonly Label rhino2 = new Label();
+        public int x = 305, y = 350, z= 215, d=350;
         public int sekilBakıyor;
         public Form1()
         {
             
             InitializeComponent();
             tank = new Rhino(29, 35);
-            Tank();
+            tank2 = new Rhino(20, 35);
+            Tank(tank);
+            Tank(tank2);
         }
 
-        public void SekilMermi()
+        public void SekilMermi(Mermi mermi)
         {
             for (int i = mermi.y; i < mermi.y + mermi.sizeMatrix; i++)
             {
@@ -42,7 +48,7 @@ namespace RhinoGame
             }
         }
 
-        public void MermiyiSifirla()
+        public void MermiyiSifirla(Mermi mermi)
         {
             for (int i = mermi.y; i < mermi.y + mermi.sizeMatrix; i++)
             {
@@ -57,7 +63,7 @@ namespace RhinoGame
         }
 
 
-        public void Tank()
+        public void Tank(Rhino tank)
         {
             for (int i = tank.y; i < tank.y + tank.sizeMatrix; i++)
             {
@@ -74,9 +80,15 @@ namespace RhinoGame
             rhino1.BackColor = Color.Transparent;
             rhino1.Location = new Point(x, y);
             this.Controls.Add(rhino1);
+
+            rhino2.Text = "Rhino 2";
+            rhino2.ForeColor = Color.White;
+            rhino2.BackColor = Color.Transparent;
+            rhino2.Location = new Point(z, d);
+            this.Controls.Add(rhino2);
         }
 
-        public void TankiSifirla()
+        public void TankiSifirla(Rhino tank)
         {
             for (int i = tank.y; i < tank.y + tank.sizeMatrix; i++)
             {
@@ -97,11 +109,24 @@ namespace RhinoGame
                 if(x > 15)
                 {
                     x -= 10;
-                    TankiSifirla();
+                    TankiSifirla(tank);
                     tank.moveLeft();
                     rhino1.Location = new Point(x, y);
                     tank.matrix = tank.rhinoShape4;
-                    Tank();
+                    Tank(tank);
+                    Invalidate();
+                }
+            }
+            if (keyData == Keys.Left)
+            {
+                if (z > 15)
+                {
+                    z -= 10;
+                    TankiSifirla(tank2);
+                    tank2.moveLeft();
+                    rhino2.Location = new Point(z, d);
+                    tank2.matrix = tank2.rhinoShape4;
+                    Tank(tank2);
                     Invalidate();
                 }
             }
@@ -110,69 +135,121 @@ namespace RhinoGame
                 if(x < 585)
                 {
                     x += 10;
-                    TankiSifirla();
+                    TankiSifirla(tank);
                     tank.moveRight();
                     tank.matrix = tank.rhinoShape2;
-                    Tank();
+                    Tank(tank);
                     Invalidate();
                 }
                 
+            }
+            if (keyData == Keys.Right)
+            {
+                if (z < 585)
+                {
+                    z += 10;
+                    TankiSifirla(tank2);
+                    tank2.moveRight();
+                    tank2.matrix = tank2.rhinoShape2;
+                    Tank(tank2);
+                    Invalidate();
+                }
+
             }
             if (keyData == Keys.W)
             {
                 if (y > 0)
                 {
                     y -= 10;
-                    TankiSifirla();
+                    TankiSifirla(tank);
                     tank.moveUp();
                     tank.matrix = tank.rhinoShape1;
-                    Tank();
+                    Tank(tank);
                     Invalidate();
                 }
                 
+            }
+            if (keyData == Keys.Up)
+            {
+                if (d > 0)
+                {
+                    d -= 10;
+                    TankiSifirla(tank2);
+                    tank2.moveUp();
+                    tank2.matrix = tank2.rhinoShape1;
+                    Tank(tank2);
+                    Invalidate();
+                }
+
             }
             if (keyData == Keys.S)
             {
                 if (y < 370)
                 {
                     y += 10;
-                    TankiSifirla();
+                    TankiSifirla(tank);
                     tank.moveDown();
                     tank.matrix = tank.rhinoShape3;
-                    Tank();
+                    Tank(tank);
                     Invalidate();
                 }
                 
             }
-            if (keyData == Keys.Space && (y<370 && y>0 && x<585 && x>15))
+            if (keyData == Keys.Down)
             {
-                if (tank.matrix == tank.rhinoShape1)
+                if (d < 370)
                 {
-                    mermi = new Mermi(tank.x + 1, tank.y - 2);
-                    sekilBakıyor = 1;
-                }
-                else if (tank.matrix == tank.rhinoShape2)
-                {
-                    mermi = new Mermi(tank.x + 3, tank.y + 1);
-                    sekilBakıyor = 2;
-                }
-                else if (tank.matrix == tank.rhinoShape3)
-                {
-                    mermi = new Mermi(tank.x + 1, tank.y + 3);
-                    sekilBakıyor = 3;
-                }
-                else if (tank.matrix == tank.rhinoShape4)
-                {
-                    mermi = new Mermi(tank.x - 2, tank.y + 1);
-                    sekilBakıyor = 4;
+                    d += 10;
+                    TankiSifirla(tank2);
+                    tank2.moveDown();
+                    tank2.matrix = tank2.rhinoShape3;
+                    Tank(tank2);
+                    Invalidate();
                 }
 
-                SekilMermi();
-                Ates.Start();
-                Invalidate();
-            }         
+            }
+            if (keyData == Keys.Space && (y < 370 && y > 0 && x < 585 && x > 15) && mermi == null) 
+            {
+                checkMermi = true;
+                mermi = test(tank,mermi);
+            }
+            if(keyData == Keys.NumPad0 && (y < 370 && y > 0 && x < 585 && x > 15) && mermi2 == null)
+            {
+                checkMermi = false;
+                mermi2 = test(tank2, mermi2);
+            }
+            
             return base.ProcessDialogKey(keyData);
-    }
+        }
+
+        public Mermi test(Rhino tank, Mermi mermi)
+        {
+            if (tank.matrix == tank.rhinoShape1)
+            {
+                mermi = new Mermi(tank.x + 1, tank.y - 2);
+                sekilBakıyor = 1;
+            }
+            else if (tank.matrix == tank.rhinoShape2)
+            {
+                mermi = new Mermi(tank.x + 3, tank.y + 1);
+                sekilBakıyor = 2;
+            }
+            else if (tank.matrix == tank.rhinoShape3)
+            {
+                mermi = new Mermi(tank.x + 1, tank.y + 3);
+                sekilBakıyor = 3;
+            }
+            else if (tank.matrix == tank.rhinoShape4)
+            {
+                mermi = new Mermi(tank.x - 2, tank.y + 1);
+                sekilBakıyor = 4;
+            }
+
+            SekilMermi(mermi);
+            Ates.Start();
+            Invalidate();
+            return mermi;
+        }
 
         public void HaritayiCiz(Graphics g)
         {
@@ -234,24 +311,32 @@ namespace RhinoGame
 
         private void Ates_Tick(object sender, EventArgs e)
         {
+            if(checkMermi)
+                mermi = test2(mermi);
+            else
+                mermi2 = test2(mermi2);
+        }
+
+        public Mermi test2(Mermi mermi)
+        {
             if (sekilBakıyor == 1)
             {
-                MermiyiSifirla();
+                MermiyiSifirla(mermi);
                 mermi.y--;
                 Invalidate();
-                if(mermi.y == -1)
+                if (mermi.y == -1)
                 {
                     Ates.Stop();
-                    mermi = null; 
+                    mermi = null;
                 }
 
             }
             else if (sekilBakıyor == 2)
             {
-                MermiyiSifirla();
+                MermiyiSifirla(mermi);
                 mermi.x++;
                 Invalidate();
-                if(mermi.x == 60)
+                if (mermi.x == 60)
                 {
                     Ates.Stop();
                     mermi = null;
@@ -259,10 +344,10 @@ namespace RhinoGame
             }
             else if (sekilBakıyor == 3)
             {
-                MermiyiSifirla();
+                MermiyiSifirla(mermi);
                 mermi.y++;
                 Invalidate();
-                if(mermi.y == 40)
+                if (mermi.y == 40)
                 {
                     Ates.Stop();
                     mermi = null;
@@ -270,10 +355,10 @@ namespace RhinoGame
             }
             else if (sekilBakıyor == 4)
             {
-                MermiyiSifirla();
+                MermiyiSifirla(mermi);
                 mermi.x--;
                 Invalidate();
-                if(mermi.x == -1)
+                if (mermi.x == -1)
                 {
                     Ates.Stop();
                     mermi = null;
@@ -281,18 +366,20 @@ namespace RhinoGame
             }
             if (mermi != null)
             {
-                MermiyiSifirla();
-                SekilMermi();
+                MermiyiSifirla(mermi);
+                SekilMermi(mermi);
                 Invalidate();
             }
-            
+            return mermi;
         }
 
         private void gameTimer_Tick(object sender, EventArgs e)
         {
-            TankiSifirla();
-            Tank();
-            SekilMermi();
+            TankiSifirla(tank);
+            TankiSifirla(tank2);
+            Tank(tank);
+            Tank(tank2);
+            SekilMermi(mermi);
             Invalidate();
         }
     }

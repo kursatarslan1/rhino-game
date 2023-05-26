@@ -22,14 +22,14 @@ namespace RhinoGame
         int[,] map = new int[40, 60];
         private readonly Label rhino1 = new Label();
         private readonly Label rhino2 = new Label();
-        public int x = 305, y = 350, z= 215, d=350;
+        public int x = 305, y = 350, z= 305, d=40;
         public int sekilBakıyor;
         public Form1()
         {
-            
             InitializeComponent();
             tank = new Rhino(29, 35);
-            tank2 = new Rhino(20, 35);
+            tank2 = new Rhino(29, 5);
+            tank2.matrix = tank2.rhinoShape3;
             Tank(tank);
             Tank(tank2);
         }
@@ -75,13 +75,13 @@ namespace RhinoGame
                     }
                 }
             }
-            rhino1.Text = "Rhino 1";
+            //rhino1.Text = "Rhino 1";
             rhino1.ForeColor = Color.White;
             rhino1.BackColor = Color.Transparent;
             rhino1.Location = new Point(x, y);
             this.Controls.Add(rhino1);
 
-            rhino2.Text = "Rhino 2";
+            //rhino2.Text = "Rhino 2";
             rhino2.ForeColor = Color.White;
             rhino2.BackColor = Color.Transparent;
             rhino2.Location = new Point(z, d);
@@ -171,7 +171,7 @@ namespace RhinoGame
             }
             if (keyData == Keys.Up)
             {
-                if (d > 0)
+                if (d >= 0)
                 {
                     d -= 10;
                     TankiSifirla(tank2);
@@ -197,7 +197,7 @@ namespace RhinoGame
             }
             if (keyData == Keys.Down)
             {
-                if (d < 370)
+                if (d < 360)
                 {
                     d += 10;
                     TankiSifirla(tank2);
@@ -208,12 +208,12 @@ namespace RhinoGame
                 }
 
             }
-            if (keyData == Keys.Space && (y < 370 && y > 0 && x < 585 && x > 15) && mermi == null) 
+            if (keyData == Keys.Space && (y < 370 && y > 0 && x < 585 && x > 15) && (mermi == null && mermi2 == null)) 
             {
                 checkMermi = true;
                 mermi = test(tank,mermi);
             }
-            if(keyData == Keys.NumPad0 && (y < 370 && y > 0 && x < 585 && x > 15) && mermi2 == null)
+            if(keyData == Keys.NumPad0 && (y < 370 && y > 0 && x < 585 && x > 15) && (mermi2 == null && mermi == null))
             {
                 checkMermi = false;
                 mermi2 = test(tank2, mermi2);
@@ -284,7 +284,7 @@ namespace RhinoGame
 
                     if (map[i, j] == 1)
                     {
-                        e.FillRectangle(Brushes.Bisque, new Rectangle(20 + j * (boyut) + 1, 20 + i * (boyut) + 1, boyut - 1, boyut - 1)); // + 1 ve - 1 ler aradaki kareler arasındaki düz çizgiler // tetromino şekil 1
+                        e.FillRectangle(Brushes.White, new Rectangle(20 + j * (boyut) + 1, 20 + i * (boyut) + 1, boyut - 1, boyut - 1)); 
                     }
                     if(map[i,j] == 2)
                     {
@@ -309,9 +309,24 @@ namespace RhinoGame
             //tank = new Rhino(3, 0);
         }
 
+        private void btnStart_Click(object sender, EventArgs e)
+        {
+            panel1.Visible = false;
+            if(txtBoxRhino1.Text != "")
+                rhino1.Text = txtBoxRhino1.Text;
+            else
+                rhino1.Text = "Rhino 1";
+            if (txtBoxRhino2.Text != "")
+                rhino2.Text = txtBoxRhino2.Text;
+            else
+                rhino2.Text = "Rhino 2";
+            this.ActiveControl = null;  //this = form
+
+        }
+
         private void Ates_Tick(object sender, EventArgs e)
         {
-            if(checkMermi)
+            if (checkMermi)
                 mermi = test2(mermi);
             else
                 mermi2 = test2(mermi2);
